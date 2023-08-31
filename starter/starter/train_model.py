@@ -2,25 +2,25 @@
 
 from sklearn.model_selection import train_test_split
 import pandas as pd
-from ml.data import process_data
-from ml.model import train_model, compute_model_metrics, inference
+from starter.ml.data import process_data, get_salary_class
+from starter.ml.model import train_model, compute_model_metrics, inference
 from sklearn.metrics import accuracy_score
+import joblib
+import logging
 
-def run_training():
+    
+def run_training(data):
 
     # Add the necessary imports for the starter code.
 
     # Add code to load in the data.
-    data = pd.read_csv('data/census.csv')
 
     # Remove spaces from columns names
     data.columns = [colname.replace(' ', '') for colname in data.columns]
 
+    print("data.shape : {}".format(data.shape))
     # Optional enhancement, use K-fold cross validation instead of a train-test split.
     train, test = train_test_split(data, test_size=0.20, random_state=0)
-
-    print("test.shape : {}".format(test.shape))
-    print(test.head(1))
 
     cat_features = [
         "workclass",
@@ -35,6 +35,7 @@ def run_training():
     X_train, y_train, encoder, lb = process_data(
         train, categorical_features=cat_features, label="salary", training=True
     )
+    print("train.shape : {}".format(X_train.shape))
 
     # Proces the test data with the process_data function.
 
@@ -48,8 +49,7 @@ def run_training():
     model = train_model(X_train, y_train)
 
     preds = inference(model, X_test)
-    print(preds[0])
-    print(y_test[0])
+
     precision, recall, fbeta = compute_model_metrics(y_test, preds)
 
     print("precision : {}".format(precision))
@@ -57,23 +57,45 @@ def run_training():
     print("fbeta : {}".format(fbeta))
     print("accuracy metric: {}".format(accuracy_score(y_test, preds)))
 
-def run_predict(df, encoder, lb, model):
+    logging.info('Save model to folder model')
+    joblib.dump(model, "./model/model_lr.pkl")
 
-    cat_features = [
-        "workclass",
-        "education",
-        "marital-status",
-        "occupation",
-        "relationship",
-        "race",
-        "sex",
-        "native-country",
-    ]
+    mapping = get_salary_class(lb)
+
+    return model, encoder, lb, cat_features, mapping
+
+
+def run_predict(input_data, model, cat_features, encoder, lb, mapping):
         
-    X_train, y_train, encoder, lb = process_data(
-        df, categorical_features=cat_features, label="salary", 
+    input_data, y, encoder, lb = process_data(
+        input_data, categorical_features=cat_features, 
         training=False, encoder=encoder, lb=lb)
+    
+    preds = inference(model, input_data)
+    preds = [key for key, value in mapping.items() if value == preds][0]
+    return preds
     
 
 if __name__ == "__main__":
-    run_training()
+    data = pd.read_csv('data/census.csv')
+    # input_data = {
+    #     "age": 27,
+    #     "workclass": "Private",
+    #     "fnlgt": 177119,
+    #     "education": "Some-college",
+    #     "education-num": 10,
+    #     "marital-status": "Divorced",
+    #     "occupation": "Adm-clerical",
+    #     "relationship": "Unmarried",
+    #     "race": "White",
+    #     "sex": "Female",
+    #     "hours-per-week" : 44,
+    #     "capital-gain": 0,
+    #     "capital-loss": 0,
+    #     "native-country": "United-Stated"
+    #     }
+    model, encoder, lb, cat_features, mapping = run_training(data)
+    # input_data = pd.DataFrame([input_data])
+        
+    # preds = run_predict(input_data, model, encoder, lb, mapping)
+    # print(preds)

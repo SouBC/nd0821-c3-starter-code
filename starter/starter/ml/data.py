@@ -43,7 +43,6 @@ def process_data(
         Trained LabelBinarizer if training is True, otherwise returns the binarizer
         passed in.
     """
-
     if label is not None:
         y = X[label]
         X = X.drop([label], axis=1)
@@ -58,6 +57,7 @@ def process_data(
         lb = LabelBinarizer()
         X_categorical = encoder.fit_transform(X_categorical)
         y = lb.fit_transform(y.values).ravel()
+        
     else:
         X_categorical = encoder.transform(X_categorical)
         try:
@@ -68,3 +68,7 @@ def process_data(
 
     X = np.concatenate([X_continuous, X_categorical], axis=1)
     return X, y, encoder, lb
+
+def get_salary_class(lb):
+    mapping = dict(zip(lb.classes_, range(len(lb.classes_))))
+    return mapping
