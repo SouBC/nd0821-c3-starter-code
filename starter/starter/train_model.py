@@ -2,18 +2,19 @@
 
 from sklearn.model_selection import train_test_split
 import pandas as pd
-from starter.ml.data import process_data, get_salary_class
-from starter.ml.model import train_model, compute_model_metrics, inference
+from ml.data import process_data, get_salary_class
+from ml.model import train_model, compute_model_metrics, inference
 from sklearn.metrics import accuracy_score
 import joblib
 import logging
 
     
-def run_training(data):
+def run_training():
 
     # Add the necessary imports for the starter code.
 
     # Add code to load in the data.
+    data = pd.read_csv('data/census.csv')
 
     # Remove spaces from columns names
     data.columns = [colname.replace(' ', '') for colname in data.columns]
@@ -77,6 +78,5 @@ def run_predict(input_data, model, cat_features, encoder, lb, mapping):
     
 
 if __name__ == "__main__":
-    data = pd.read_csv('data/census.csv')
-
-    model, encoder, lb, cat_features, mapping = run_training(data)
+    
+    model, encoder, lb, cat_features, mapping = run_training()
