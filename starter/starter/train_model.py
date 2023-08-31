@@ -78,24 +78,5 @@ def run_predict(input_data, model, cat_features, encoder, lb, mapping):
 
 if __name__ == "__main__":
     data = pd.read_csv('data/census.csv')
-    # input_data = {
-    #     "age": 27,
-    #     "workclass": "Private",
-    #     "fnlgt": 177119,
-    #     "education": "Some-college",
-    #     "education-num": 10,
-    #     "marital-status": "Divorced",
-    #     "occupation": "Adm-clerical",
-    #     "relationship": "Unmarried",
-    #     "race": "White",
-    #     "sex": "Female",
-    #     "hours-per-week" : 44,
-    #     "capital-gain": 0,
-    #     "capital-loss": 0,
-    #     "native-country": "United-Stated"
-    #     }
+
     model, encoder, lb, cat_features, mapping = run_training(data)
-    # input_data = pd.DataFrame([input_data])
-        
-    # preds = run_predict(input_data, model, encoder, lb, mapping)
-    # print(preds)

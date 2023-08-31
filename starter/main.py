@@ -59,5 +59,6 @@ async def predict(input_data: CensusDataInputSchema) -> Any :
     results = {
         "expected_salary" : preds
     }
+    
     return results
 
