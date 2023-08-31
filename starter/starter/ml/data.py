@@ -78,3 +78,14 @@ def process_data(
 def get_salary_class(lb):
     mapping = dict(zip(lb.classes_, range(len(lb.classes_))))
     return mapping
+
+category_features = [
+        "workclass",
+        "education",
+        "marital-status",
+        "occupation",
+        "relationship",
+        "race",
+        "sex",
+        "native-country",
+    ]
