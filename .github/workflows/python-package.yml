@@ -8,6 +8,12 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+env:
+  AWS_REGION : "eu-west-3"
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build:
@@ -29,7 +35,12 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest pandas
         pip install -r starter/requirements.txt
-    - name: Fetch Data from dvc
+    - name: Connect to AWS role 
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+          role-to-assume: <arn:aws:iam::913655913727:role/GitHubAction-AssumeRoleWithAction> #change to reflect your IAM role’s ARN
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
       run: |
         dvc pull
     - name: Lint with flake8
