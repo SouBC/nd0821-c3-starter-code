@@ -4,8 +4,8 @@ import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from ml.data import process_data, get_salary_class
-from ml.model import train_model, compute_model_metrics, inference
+from .ml.data import process_data, get_salary_class
+from .ml.model import train_model, compute_model_metrics, inference
 
 
 def run_training():
