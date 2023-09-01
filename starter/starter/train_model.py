@@ -58,7 +58,7 @@ def run_training(data):
     print("accuracy metric: {}".format(accuracy_score(y_test, preds)))
 
     logging.info('Save model to folder model')
-    joblib.dump(model, "model/model_lr.pkl")
+    joblib.dump(model, "starter/model/model_lr.pkl")
 
     mapping = get_salary_class(lb)
 
@@ -77,5 +77,5 @@ def run_predict(input_data, model, cat_features, encoder, lb, mapping):
 
 
 if __name__ == "__main__":
-    data = pd.read_csv('../data/census.csv')
+    data = pd.read_csv('starter/data/census.csv')
     model, encoder, lb, cat_features, mapping = run_training(data)

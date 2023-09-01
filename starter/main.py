@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from fastapi.responses import HTMLResponse
 import pandas as pd
 from fastapi.encoders import jsonable_encoder
-import starter.train_model as starter
+import starter.starter.train_model as starter
 
 
 class PredictionResults(BaseModel):
@@ -54,7 +54,7 @@ async def index():
 
 @app.post("/model/", status_code=200)
 async def predict(input_data: CensusDataInputSchema) -> Any:
-    data = pd.read_csv('data/census.csv')
+    data = pd.read_csv('starter/data/census.csv')
     model, encoder, lb, cat_features, mapping = starter.run_training(data)
 
     input_df = pd.DataFrame(jsonable_encoder(input_data), index=[0])
