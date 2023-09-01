@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from fastapi.responses import HTMLResponse
 import pandas as pd
 from fastapi.encoders import jsonable_encoder
-from starter.train_model import run_training, run_predict
+from .starter.train_model import run_training, run_predict
 
 
 class PredictionResults(BaseModel):
