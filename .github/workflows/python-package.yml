@@ -41,6 +41,9 @@ jobs:
           role-to-assume: arn:aws:iam::913655913727:role/GitHubAction-AssumeRoleWithAction #change to reflect your IAM role’s ARN
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
+    - name: Sts GetCallerIdentity
+      run: |
+        aws sts get-caller-identity
     - name: Fetch data from dvc
       run: |
         dvc pull
