@@ -9,3 +9,4 @@ gunicorn
 autopep8
 flake8
 dvc
+dvc-s3
