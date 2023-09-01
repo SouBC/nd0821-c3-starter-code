@@ -8,3 +8,4 @@ uvicorn
 gunicorn
 autopep8
 flake8
+dvc
