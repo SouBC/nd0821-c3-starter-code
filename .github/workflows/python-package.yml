@@ -29,6 +29,9 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest pandas
         pip install -r starter/requirements.txt
+    - name: Fetch Data from dvc
+      run: |
+        dvc pull
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
