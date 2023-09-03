@@ -34,7 +34,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest pandas
-        pip install -r starter/requirements.txt
+        pip install -r requirements.txt
     - name: Connect to AWS role 
       uses: aws-actions/configure-aws-credentials@v1.7.0
       with:
