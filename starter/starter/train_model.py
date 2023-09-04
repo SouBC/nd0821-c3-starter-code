@@ -10,8 +10,6 @@ from ml.model import train_model, compute_model_metrics, inference
 
 def run_training(data):
 
-    # Add the necessary imports for the starter code.
-
     # Add code to load in the data.
 
     # Remove spaces from columns names
@@ -48,8 +46,6 @@ def run_training(data):
 
     model = train_model(X_train, y_train)
 
-    logging.info('Save model & encoders:')
-
     preds = inference(model, X_test)
 
     precision, recall, fbeta = compute_model_metrics(y_test, preds)
@@ -59,25 +55,27 @@ def run_training(data):
     print("fbeta : {}".format(fbeta))
     print("accuracy metric: {}".format(accuracy_score(y_test, preds)))
 
-    for feature in cat_features:
-        
-        classes = test[feature].unique()
+    with open('slice_output.txt', 'a') as f:
+        for feature in cat_features:
 
-        for cla in classes:
-            row_slice = test[feature] == cla
-            precision, recall, fbeta = compute_model_metrics(y_test[row_slice], model.predict(X_test[row_slice]))
-            print("{} - {} precision : {}".format(feature, cla, precision))
-            print("{} - {} recall : {}".format(feature, cla, recall))
-            print("{} - {} fbeta : {}".format(feature, cla, fbeta))
+            classes = test[feature].unique()
+
+            for cla in classes:
+                row_slice = test[feature] == cla
+                precision, recall, fbeta = compute_model_metrics(y_test[row_slice], model.predict(X_test[row_slice]))
+                f.write("{} - {} precision : {}\n".format(feature, cla, precision))
+                f.write("{} - {} recall : {}\n".format(feature, cla, recall))
+                f.write("{} - {} fbeta : {}\n".format(feature, cla, fbeta))
+
+    logging.info('Save model & encoders:')
 
     joblib.dump((model,encoder, lb, cat_features), "starter/model/model_lr.pkl")
-
-    return model, encoder, lb, cat_features
 
 
 def run_predict(input_data, path_model):
 
     (model,encoder, lb, cat_features) = joblib.load(path_model)
+
     input_data, y, encoder, lb = process_data(
         input_data, categorical_features=cat_features,
         training=False, encoder=encoder, lb=lb)
@@ -87,11 +85,9 @@ def run_predict(input_data, path_model):
     preds = [key for key, value in mapping.items() if value == preds][0]
     return preds
 
-    # row_slice = X_val["ConvexArea"] < 90407.3
-    # print(f1_score(y_val[row_slice], lr.predict(X_val[row_slice])))
 
 
 if __name__ == "__main__":
     data = pd.read_csv('starter/data/census.csv')
-    model, encoder, lb, cat_features = run_training(data)
+    run_training(data)
 
