@@ -13,7 +13,7 @@ if "DYNO" in os.environ and os.path.isdir(".dvc"):
     if os.system("dvc pull") != 0:
         exit("dvc pull failed")
     os.system("rm -r .dvc .apt/usr/lib/dvc")
-    
+
 class PredictionResults(BaseModel):
     expected: dict
 
@@ -38,12 +38,13 @@ class CensusDataInputSchema(BaseModel):
 
 
 app = FastAPI(
-    title="Project Deployment API",
-    version="0.0.1")
+    title="FastAPI - Project",
+    version="0.1.0")
 
 
 @app.get("/")
 async def index():
+    
     """Basic HTML response."""
     body = (
         "<html>"
@@ -61,12 +62,10 @@ async def index():
 
 @app.post("/model/", status_code=200)
 async def predict(input_data: CensusDataInputSchema) -> Any:
-    data = pd.read_csv('starter/data/census.csv')
-    model, encoder, lb, cat_features, mapping = starter.run_training(data)
-
+    
     input_df = pd.DataFrame(jsonable_encoder(input_data), index=[0])
 
-    preds = starter.run_predict(input_df, model, cat_features, encoder, lb, mapping)
+    preds = starter.run_predict(input_df, 'starter/model/model_lr.pkl"')
 
     results = {
         "expected_salary": preds
