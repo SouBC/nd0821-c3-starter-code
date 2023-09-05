@@ -69,7 +69,7 @@ def run_training(data):
 
     logging.info('Save model & encoders:')
 
-    joblib.dump((model,encoder, lb, cat_features), "starter/model/model_lr.pkl")
+    joblib.dump((model,encoder, lb, cat_features), "model/model_lr.pkl")
 
 
 def run_predict(input_data, path_model):
@@ -88,6 +88,6 @@ def run_predict(input_data, path_model):
 
 
 if __name__ == "__main__":
-    data = pd.read_csv('starter/data/census.csv')
+    data = pd.read_csv('data/census.csv')
     run_training(data)
 

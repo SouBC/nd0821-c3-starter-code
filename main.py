@@ -65,7 +65,7 @@ async def predict(input_data: CensusDataInputSchema) -> Any:
     
     input_df = pd.DataFrame(jsonable_encoder(input_data), index=[0])
 
-    preds = starter.run_predict(input_df, 'starter/model/model_lr.pkl')
+    preds = starter.run_predict(input_df, 'model/model_lr.pkl')
 
     results = {
         "expected_salary": preds
