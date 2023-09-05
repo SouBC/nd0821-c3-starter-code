@@ -20,7 +20,7 @@ def test_api_get_root():
 
 def test_make_prediction() -> None:
     # Given
-    test_data = pd.read_csv('data/census.csv')
+    test_data = pd.read_csv('starter/data/census.csv')
     test_data = test_data.iloc[0,:]
 
     payload = test_data.to_dict()
