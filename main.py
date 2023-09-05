@@ -35,6 +35,7 @@ class CensusDataInputSchema(BaseModel):
     native_country: str = Field(
         alias="native-country",
         examples=["United-Stated"])
+    
 
 
 app = FastAPI(
