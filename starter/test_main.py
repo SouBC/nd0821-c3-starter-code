@@ -6,17 +6,15 @@ import pandas as pd
 
 client = TestClient(app)
 
-def test_api_get_root():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.text ==  "<html><body style='padding: 10px;'><h1>Welcome to the API</h1><div>Check the docs: <a href='/docs'>here</a></div></body></html>"
-
-
 # def test_post_data_fail():
 #     data = {"feature_1": -5, "feature_2": "test string"}
 #     r = client.post("/data/", data=json.dumps(data))
 #     assert r.status_code == 400
 
+def test_api_get_root():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.text ==  "<html><body style='padding: 10px;'><h1>Welcome to the API</h1><div>Check the docs: <a href='/docs'>here</a></div></body></html>"
 
 def test_make_prediction() -> None:
     # Given
