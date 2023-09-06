@@ -29,9 +29,9 @@ class CensusDataInputSchema(BaseModel):
     relationship: str = Field(examples=["Unmarried"])
     race: str = Field(examples=["White"])
     sex: str = Field(examples=["Female"])
-    hours_per_week: int = Field(alias="hours-per-week", examples=[44])
     capital_gain: int = Field(alias="capital-gain", examples=[0])
     capital_loss: int = Field(alias="capital-loss", examples=[0])
+    hours_per_week: int = Field(alias="hours-per-week", examples=[44])
     native_country: str = Field(
         alias="native-country",
         examples=["United-Stated"])
@@ -66,10 +66,10 @@ async def predict(input_data: CensusDataInputSchema) -> Any:
     
     input_df = pd.DataFrame(jsonable_encoder(input_data), index=[0])
 
-    preds = starter.run_predict(input_df, 'model/model_lr.pkl')
+    preds, preds_classes = starter.run_predict(input_df, 'model/model_rf.pkl')
 
     results = {
-        "expected_salary": preds
+        "expected_salary": preds_classes[0]
     }
 
     return results

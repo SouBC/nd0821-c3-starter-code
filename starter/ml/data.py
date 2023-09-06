@@ -51,7 +51,8 @@ def process_data(
     if label is not None:
         y = X[label]
         X = X.drop([label], axis=1)
-    else:
+        
+    else:    
         y = np.array([])
 
     X_categorical = X[categorical_features].values
@@ -69,14 +70,15 @@ def process_data(
             y = lb.transform(y.values).ravel()
         # Catch the case where y is None because we're doing inference.
         except AttributeError:
-            print("y is empty, must have it for inference phase.")
+            print("Inference Mode : y will be set to be empty")
+            y = np.ndarray([])
 
     X = np.concatenate([X_continuous, X_categorical], axis=1)
     return X, y, encoder, lb
 
 
 def get_salary_class(lb):
-    mapping = dict(zip(lb.classes_, range(len(lb.classes_))))
+    mapping = dict(zip(range(len(lb.classes_)), lb.classes_))
     return mapping
 
 category_features = [
