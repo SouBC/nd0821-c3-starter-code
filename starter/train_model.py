@@ -1,4 +1,4 @@
-# Script to train machine learning model.
+"""train/save machine learning model."""
 import logging
 import joblib
 import pandas as pd
@@ -9,17 +9,14 @@ from ml.model import train_model, compute_model_metrics, inference
 
 
 def run_training(data):
-
-    # Add code to load in the data.
-
+    """Run training/saving/inference/compute metrics"""
     # Remove spaces from columns names
     data.columns = [colname.replace(' ', '') for colname in data.columns]
 
-    print(f"data.shape : {format(data.shape)}")
+    print(f"data.shape : {data.shape}")
     # Optional enhancement, use K-fold cross validation instead of a
     # train-test split.
     train, test = train_test_split(data, test_size=0.20, random_state=0)
-    print(test.head())
 
     cat_features = [
         "workclass",
@@ -34,15 +31,14 @@ def run_training(data):
     X_train, y_train, encoder, lb = process_data(
         train, categorical_features=cat_features, label="salary", training=True
     )
-    print("train.shape : {}".format(X_train.shape))
+    print(f"train.shape : {X_train.shape}")
 
     # Proces the test data with the process_data function.
 
     X_test, y_test, encoder, lb = process_data(
         test, categorical_features=cat_features,
         label="salary", training=False, encoder=encoder, lb=lb)
-    
-    
+
     # Train and save a model.
 
     model = train_model(X_train, y_train)
@@ -51,53 +47,55 @@ def run_training(data):
 
     precision, recall, fbeta = compute_model_metrics(y_test, preds)
 
-    print("precision : {}".format(precision))
-    print("recall: {}".format(recall))
-    print("fbeta : {}".format(fbeta))
-    print("accuracy metric: {}".format(accuracy_score(y_test, preds)))
+    print(f"precision : {precision}")
+    print(f"recall: {recall}")
+    print(f"fbeta : {fbeta}")
+    print(f"accuracy metric: {accuracy_score(y_test, preds)}")
 
     # add return here to experiment other configurations
 
-    with open('slice_output.txt', 'a') as f:
+    with open('slice_output.txt', 'a') as file:
         for feature in cat_features:
 
             classes = test[feature].unique()
 
             for cla in classes:
                 row_slice = test[feature] == cla
-                precision, recall, fbeta = compute_model_metrics(y_test[row_slice], model.predict(X_test[row_slice]))
-                f.write("\n{} - {} precision : {}\n".format(feature, cla, precision))
-                f.write("{} - {} recall : {}\n".format(feature, cla, recall))
-                f.write("{} - {} fbeta : {}\n".format(feature, cla, fbeta))
-    
+                precision, recall, fbeta = compute_model_metrics(
+                    y_test[row_slice], model.predict(X_test[row_slice]))
+                file.write(f"\n{feature} - {cla} precision : {fbeta}\n")
+                file.write(f"{feature} - {cla} recall : {fbeta}\n")
+                file.write(f"{feature} - {cla} fbeta : {fbeta}\n")
+
     test['preds'] = preds
     print(test.head())
-    return model,encoder, lb, cat_features
+    return model, encoder, lb, cat_features
 
 
-def save_model(model,encoder, lb, cat_features):
+def save_model(model, encoder, lb, cat_features):
+    """Save model, encoder, lb and list of category features"""
     logging.info('Save model & encoders:')
-    joblib.dump((model,encoder, lb, cat_features), "model/model_rf.pkl")
+    joblib.dump((model, encoder, lb, cat_features), "model/model_rf.pkl")
+
 
 def run_predict(input_data, path_model):
-
-    (model,encoder, lb, cat_features) = joblib.load(path_model)
+    """load modek and make prediction on the input_data"""
+    (model, encoder, lb, category_features) = joblib.load(path_model)
 
     input_data_np, y, encoder, lb = process_data(
-        input_data, categorical_features=cat_features,
+        input_data, categorical_features=category_features,
         training=False, encoder=encoder, lb=lb)
-    
+
     preds = inference(model, input_data_np)
     mapping = get_salary_class(lb)
-    print(mapping)
-    preds_class = [mapping[value] for value in preds ]
+    preds_class = [mapping[value] for value in preds]
     return preds, preds_class
+
 
 if __name__ == "__main__":
     data = pd.read_csv('data/census.csv')
-    model,encoder, lb, cat_features = run_training(data)
-    save_model(model,encoder, lb, cat_features)
+    model, encoder, lb, cat_features = run_training(data)
+    save_model(model, encoder, lb, cat_features)
     y = data["salary"]
     data = data.drop("salary", axis=1)
     preds, preds_classes = run_predict(data, "model/model_rf.pkl")
-

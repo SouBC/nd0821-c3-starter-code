@@ -1,11 +1,11 @@
 #  Project Submission
 
 - Github repo : https://github.com/SouBC/nd0821-c3-starter-code
+- CI/CD : Githhib actions
+- Data (census.csv, encoders and model) are stored in a S3 bucket and versionned with dvc.
+- API deployed in heroku.
 
 
-
-
-Working in a command line environment is recommended for ease of use with git and dvc. If on Windows, WSL1 or 2 is recommended.
 
 # Environment Set up
 * Download and install conda if you don’t have it already.

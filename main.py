@@ -1,12 +1,13 @@
+""" API"""
+import os
 from typing import Any
-from fastapi import FastAPI
 from pydantic import BaseModel, Field
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-import pandas as pd
 from fastapi.encoders import jsonable_encoder
+import pandas as pd
 import starter.train_model as starter
 
-import os
 
 if "DYNO" in os.environ and os.path.isdir(".dvc"):
     os.system("dvc config core.no_scm true")
@@ -14,11 +15,14 @@ if "DYNO" in os.environ and os.path.isdir(".dvc"):
         exit("dvc pull failed")
     os.system("rm -r .dvc .apt/usr/lib/dvc")
 
+
 class PredictionResults(BaseModel):
+    """schema of output"""
     expected: dict
 
 
 class CensusDataInputSchema(BaseModel):
+    """Schema of the input"""
     age: int = Field(examples=[27])
     workclass: str = Field(examples=["Private"])
     fnlgt: int = Field(examples=[177119])
@@ -35,7 +39,6 @@ class CensusDataInputSchema(BaseModel):
     native_country: str = Field(
         alias="native-country",
         examples=["United-Stated"])
-    
 
 
 app = FastAPI(
@@ -63,7 +66,7 @@ async def index():
 
 @app.post("/model/", status_code=200)
 async def predict(input_data: CensusDataInputSchema) -> Any:
-    
+    """Load model and make prediction from input_data"""
     input_df = pd.DataFrame(jsonable_encoder(input_data), index=[0])
 
     preds, preds_classes = starter.run_predict(input_df, 'model/model_rf.pkl')
