@@ -38,6 +38,10 @@ The current model performs relatively well for a basic ML model without hyperpar
 - accuracy metric: 0.8499
 
 ## Ethical Considerations
+Risks and harms : Predicting an individual's income is not solely based on the features used in the model. Other factors not included in the model may
+play a tremendous effect on it, therefore we must be cautious when using this model.
+Data : Some features used by the model such as race or sex are ethically inappropriate and/or harmeful for minorities classes. 
+
 
 ## Caveats and Recommendations
 - Include more features.
